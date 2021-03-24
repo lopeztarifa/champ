@@ -62,6 +62,7 @@ subroutine read_lcao(norb_tmp, nbasis_tmp, iwft, filename)
     ! if (nbasis .gt. MBASIS) call fatal_error('LCAO: nbasis > MBASIS')
     ! if (nototal .gt. MORB) call fatal_error('LCAO: number of orbitals > MORB')
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
 
     if (iwft .gt. nwftype) call fatal_error('LCAO: wave function type > nwftype')
 
@@ -117,6 +118,7 @@ subroutine read_exponents(iu, iwft)
     implicit real*8(a - h, o - z)
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     write (6, *) 'nbasis', nbasis
 
     allocate (zex(nbasis, nwftype))
@@ -144,6 +146,7 @@ subroutine read_determinants(iu, nd, iwft)
     implicit real*8(a - h, o - z)
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
 
     ndet = nd
     MDET = nd
@@ -237,6 +240,7 @@ subroutine read_jastrow_parameter(iu, iwft)
     call p2gti('atoms:nctype', nctype, 1)
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     if (ijas .lt. 4 .or. ijas .gt. 6) call fatal_error('JASTROW: only ijas=4,5,6 implemented')
     if (ndn .eq. 1 .and. nspin2 .eq. 3) call fatal_error('JASTROW: 1 spin down and nspin2=3')
 
@@ -550,6 +554,7 @@ subroutine read_csf(ncsf_read, nstates_read, fn)
 
     character fn*(*)
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     call ptfile(iu, fn, 'old')
 
     ncsf = ncsf_read
@@ -589,6 +594,7 @@ subroutine read_csfmap(fn)
 
     call ptfile(iu, fn, 'old')
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
 
     read (iu, *) ncsf_check, ndet_check, nmap_check
     write (6, '(''csfmap'',3i4)') ncsf_check, ndet_check, nmap_check

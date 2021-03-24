@@ -22,7 +22,6 @@ c Compute the size of some matrices we need
       call compute_mat_size()
 
 c Allocate memory of all arrays
-      ! call allocate_all_arrays()
       call allocate_vmc()
       call allocate_dmc()
 
@@ -64,10 +63,10 @@ c and read in everything which is still in the old format
 
         !> force
         call p2gtid('general:nforce',nforce,1,1)
-        MFORCE = nforce
 
         !> wftype
         call p2gtid('general:nwftype',nwftype,1,1)
+        call fix_nwftype()
 
         !> sampling
         if(index(mode,'vmc').eq.0) call p2gtad('dmc:mode_dmc',mode,'dmc_one_mpi1',1)
@@ -87,10 +86,6 @@ c and read in everything which is still in the old format
 
         !> optimization method
         call p2gtad('optwf:method', method, 'linear', 1)
-        if (method .eq. 'linear') then
-          nwftype = 3
-          MFORCE = 3
-        endif
 
       end subroutine preprocess_input
 
@@ -122,34 +117,21 @@ c and read in everything which is still in the old format
 
       end subroutine
 
-      subroutine allocate_all_arrays()
-            !> massive dynamic allocation
-            call allocate_m_common
-            call allocate_m_basis
-            call allocate_m_control
-            call allocate_m_deriv
-            call allocate_m_efield
-            call allocate_m_estimators
-            call allocate_m_ewald
-            call allocate_m_force
-            call allocate_m_gradhess
-            call allocate_m_grdnt
-            call allocate_m_grid
-            call allocate_m_jastrow
-            call allocate_m_mixderiv
-            call allocate_m_mmpol
-            call allocate_m_mstates
-            call allocate_m_optci
-            call allocate_m_optorb
-            call allocate_m_optwf
-            call allocate_m_pcm
-            call allocate_m_prop
-            call allocate_m_pseudo
-            call allocate_m_sampling
-            call allocate_m_sr
-            call allocate_m_state_avrg
-      end subroutine allocate_all_arrays
+      subroutine fix_nwftype()
+        !> fix the value of nwftype if
+        ! we do a corsamp opt
 
+        use wfsec, only: nwftype
+        use forcepar, only: nforce
+        use force_mod, only: MFORCE, MWF
+        use method_opt, only: method
+
+        call p2gtad('optwf:method', method, 'linear', 1)
+        if (method .eq. 'linear') then
+          nwftype = MWF
+          nforce = MFORCE
+        endif
+      end subroutine fix_nwftype
 c-----------------------------------------------------------------------
       subroutine process_input
 c Written by Cyrus Umrigar, Claudia Filippi, Friedemann Schautz,
@@ -396,6 +378,7 @@ c General section
 
       ! if(nforce.gt.MFORCE) call fatal_error('INPUT: nforce > MFORCE')
       call p2gtid('general:nwftype',nwftype,1,1)
+      call fix_nwftype()
       write(6,'(/,''number of wave functions='',t30,i10)') nwftype
       if(nwftype.gt.nforce) call fatal_error('INPUT: nwftype gt nforce')
       !if(nwftype.gt.MWF) call fatal_error('INPUT: nwftype gt MWF')
@@ -1199,10 +1182,10 @@ c Check that the required blocks are there in the input
 
       call p2gti('electrons:nelec',nelec,1)
       call p2gti('electrons:nup',nup,1)
-      call p2gtid('general:nwftype',nwftype,1,1)
       call p2gtid('general:nforce',nforce,1,1)
       ! if(nforce.gt.MFORCE) call fatal_error('INPUT: nforce > MFORCE')
       call p2gtid('general:nwftype',nwftype,1,1)
+      call fix_nwftype()
       !if(nwftype.gt.MWF) call fatal_error('INPUT: nwftype gt MWF')
       call p2gtid('general:iperiodic',iperiodic,0,1)
       call p2gtid('general:ibasis',ibasis,1,1)

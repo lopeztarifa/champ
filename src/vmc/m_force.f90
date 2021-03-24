@@ -1,5 +1,5 @@
 module force_mod
-     integer :: MFORCE
+     integer, parameter :: MFORCE = 3
      integer, parameter :: MFORCE_WT_PRD = 1000
      integer, parameter :: MWF = 3
 

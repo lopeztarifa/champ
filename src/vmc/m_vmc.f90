@@ -22,19 +22,18 @@ module vmc_mod
     !  Jastrow3 for reasons I do not understand."
     !     parameter(NEQSX=2*(MORDJ-1),MTERMS=55)
 
-    integer :: MMAT_DIM20 ! never used ??!!
-
+    integer :: MMAT_DIM20
     real(dp), parameter :: radmax = 10.d0
     integer, parameter :: nrad = 3001
     real(dp), parameter :: delri = (nrad - 1)/radmax
 
-    ! integer, parameter :: MELEC = 32, MORB = 500, MBASIS = 500, MDET = 1000, MCENT = 20
-    integer, parameter :: MELEC = 32, MBASIS = 500, MCENT = 20
-    integer, parameter :: MCTYPE = 3
+    ! integer, parameter :: MELEC = 32, MORB = 15, MBASIS = 15, MDET = 1, MCENT = 2
+    integer, parameter :: MELEC = 32, MBASIS = 15, MCENT = 2
     integer :: MORB
     integer :: MDET
-    integer :: MCTYP3X
+    integer, parameter :: MCTYPE = 3
     integer, parameter :: NSPLIN = 1001, MORDJ = 7
+    integer :: MCTYPE3X
 
     integer :: MMAT_DIM, MMAT_DIM2
     integer, parameter :: MORDJ1 = MORDJ + 1
@@ -51,7 +50,6 @@ module vmc_mod
     public :: radmax, delri
 
     public :: NEQSX, MTERMS
-
     public :: MCENT3, NCOEF, MEXCIT
     public :: set_vmc_size
 

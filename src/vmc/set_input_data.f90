@@ -14,6 +14,7 @@ subroutine inputzex
     allocate (zex(nbasis, nwftype))
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     call p2gtid('general:iperiodic', iperiodic, 0, 1)
     if (nwftype .gt. MWF) call fatal_error('WF: nwftype gt MWF')
 
@@ -80,6 +81,7 @@ subroutine multideterminants_define(iflag, icheck)
     ndn = nelec - nup
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     if (nwftype .gt. MWF) call fatal_error('INPUT: nwftype exceeds MWF')
 
     if (iflag .eq. 0) then
@@ -280,6 +282,7 @@ subroutine inputforces
     call set_displace_zero(nforce)
 
     call p2gtid('general:nwftype', nwftype, 1, 1)
+    call fix_nwftype()
     if (nwftype .gt. MWF) call fatal_error('FORCES: nwftype gt MWF')
 
     if (nwftype .eq. 1) then
@@ -305,7 +308,7 @@ subroutine inputdet(nwftype)
 
     implicit real*8(a - h, o - z)
 
-    allocate (cdet(MDET, MSTATES, nwftype))
+    if(.not.allocated(cdet)) allocate(cdet(MDET, MSTATES, nwftype))
 
     do iwft = 2, nwftype
         do k = 1, ndet
@@ -320,7 +323,7 @@ subroutine inputlcao(nwftype)
     use coefs, only: coef, nbasis, norb
     implicit real*8(a - h, o - z)
 
-    allocate (coef(nbasis, MORB, nwftype))
+    if(.not. allocated(coef)) allocate (coef(nbasis, MORB, nwftype))
 
     do iwft = 2, nwftype
         do i = 1, norb
@@ -355,16 +358,16 @@ subroutine inputjastrow(nwftype)
     call p2gti('atoms:natom', ncent, 1)
     call p2gti('atoms:nctype', nctype, 1)
 
-    allocate (scalek(nwftype))
+    if(.not.allocated(scalek)) allocate (scalek(nwftype))
 
     if (ijas .ge. 4 .and. ijas .le. 6) then
         mparmja = 2 + max(0, norda - 1)
         mparmjb = 2 + max(0, nordb - 1)
         mparmjc = nterms4(nordc)
 
-        allocate (a4(mparmja, nctype, nwftype))
-        allocate (b(mparmjb, 2, nwftype))
-        allocate (c(mparmjc, nctype, nwftype))
+        if(.not.allocated(a4)) allocate (a4(mparmja, nctype, nwftype))
+        if(.not.allocated(b)) allocate (b(mparmjb, 2, nwftype))
+        if(.not.allocated(c)) allocate (c(mparmjc, nctype, nwftype))
 
         do iwft = 2, nwftype
             scalek(iwft) = scalek(1)
