@@ -24,7 +24,7 @@ c numerical Laplacian for periodic systems.
       use precision_kinds, only: dp
 
       implicit none
-
+! test
       interface
         function psi(rij,ri,rj,it)
             use precision_kinds, only: dp
