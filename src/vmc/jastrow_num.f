@@ -40,7 +40,7 @@ c numerical Laplacian for periodic systems.
             integer, intent(in) ::it 
             real(dp), intent(in) :: ri
             real(dp) :: psia 
-        end function psia 
+        end function psia
 
         function psib(rij, isb, ipar)
             use precision_kinds, only: dp
@@ -48,7 +48,7 @@ c numerical Laplacian for periodic systems.
             integer, intent(in) :: isb, ipar 
             real(dp), intent(in) :: rij 
             real(dp) :: psib 
-        end function psib 
+        end function psib
       end interface
 
       integer :: i, ic, ij, im1, ipar
